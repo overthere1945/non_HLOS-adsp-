@@ -1,0 +1,55 @@
+#===============================================================================
+# 파일명: sns_himax_dsp.scons
+# 목적 및 기능: Himax DSP 이미지 센서 전용 드라이버를 퀄컴 ADSP (SEE) 환경에서 
+#              컴파일 및 빌드하기 위한 SCons 스크립트 파일입니다.
+#===============================================================================
+Import('env') # SCons 환경 변수(Environment)를 스크립트 내로 임포트합니다.
+import inspect # 현재 파일 경로 및 빌드 환경을 추적하기 위해 inspect 모듈을 임포트합니다.
+
+himax_dsp_island_enable = False # Himax DSP의 Island 모드 활성화 플래그를 기본값(False)으로 초기화합니다.
+
+# 코어 BSP (Board Support Package) API 의존성 리스트
+# 드라이버가 접근해야 할 하위 시스템 인터페이스들을 정의합니다.
+cbsp_api = [
+  'DEBUGTOOLS', # 디버그 툴 (SNS_PRINTF 등의 로깅 기능)
+  'SERVICES',   # 시스템 서비스
+  'KERNEL',     # 커널 (QuRT 메모리 맵핑 및 인터럽트 처리에 필수)
+  'POWER',      # 전원 관리
+  'MPROC',      # 멀티 프로세서 통신 매니저
+  'STORAGE',    # 스토리지(필요 시)
+]
+
+# Protocol Buffer (PB) API 의존성 리스트
+# change(add)-hyungchul-20260320-1426: Himax DSP 드라이버에 불필요한 registry, resampler를 제거하고, 실제 사용하는 interrupt, async_com_port 추가
+pb_api = [
+  'sns_suid',             # SUID 획득 및 의존성 검색을 위한 PB
+  'sns_interrupt',        # 하드웨어 인터럽트(GPIO 102) 제어를 위한 PB
+  'sns_async_com_port',   # 비동기 COM 포트 (SPI 통신) 설정을 위한 PB
+  'sns_std_sensor',       # 센서 표준 설정(Config/Event)을 위한 PB
+  'sns_std_type',         # 센서 표준 데이터 타입 PB
+  'sns_std',              # 기본 센서 표준 메시지 PB
+]
+
+# QSH(Qualcomm Sensor Hub) 플랫폼의 내부/외부 헤더 파일 경로를 컴파일러의 include path에 추가합니다.
+env.Append(CPPPATH= ["${BUILD_ROOT}/qsh_platform/inc", "${BUILD_ROOT}/qsh_platform/inc/internal" ])
+
+# change(add)-hyungchul-20260320-1426: 빌드 환경 변수에 HIMAX_DSP 아일랜드 모드 플래그가 설정되어 있는지 확인
+if 'SNS_ISLAND_INCLUDE_HIMAX_DSP' in env:     # 빌드 커맨드나 최상위 설정에 플래그가 존재하면
+  himax_dsp_island_enable = True              # Island 모드를 활성화하여 저전력 메모리 영역에 적재 준비
+
+# SSC(Snapdragon Sensor Core) 정적 라이브러리 빌더가 활성화되어 있는지 확인
+if 'USES_SSC_STATIC_LIB_BUILDER' in env:
+  # 현재 타겟 아키텍처가 Hexagon DSP(ADSP/SLPI)인지 확인
+  if 'SSC_TARGET_HEXAGON' in env['CPPDEFINES']:
+    
+    # change(add)-hyungchul-20260320-1426: 드라이버 등록 함수명을 sns_register_himax_dsp로 명시하여 빌드 툴체인에 전달
+    env.AddSSCSU(inspect.getfile(inspect.currentframe()), # 현재 실행 중인 scons 파일의 경로를 전달
+               register_func_name = "sns_register_himax_dsp", # 센서 프레임워크 초기화 시 호출할 C 함수명 매핑
+               binary_lib = False,                            # 사전 컴파일된 바이너리가 아닌 소스 코드 기반 빌드 지시
+               add_island_files = himax_dsp_island_enable,    # Island 모드 포함 여부 적용
+               diag_ssid = "MSG_SSID_SNS_SENSOR_EXT",         # Diag 툴(QXDM 등)에서 사용할 서브시스템 ID
+               ssc_protected_api  = ['SNS_INTERNAL_INCLUDES', 'SNS_FRAMEWORK'], # SEE 프레임워크의 보호된 헤더에 대한 접근 권한 부여
+               pb_apis            = pb_api,                   # 위에서 정의한 Protocol Buffer 컴파일 의존성 적용
+               core_public_api    = cbsp_api,                 # 위에서 정의한 코어 공개 API 의존성 적용
+               qsh_api            = ['QSH_INCLUDES'],         # QSH 헤더 접근 권한 부여
+               segment            = 'ssc')                    # 드라이버가 적재될 메모리 세그먼트를 'ssc'로 지정

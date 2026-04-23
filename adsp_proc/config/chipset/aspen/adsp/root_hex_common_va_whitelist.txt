@@ -1,0 +1,22 @@
+#=============================================================================
+# root_hex_common_va_whitelist.txt
+#
+# GENERAL DESCRIPTION
+#        Add hexagon undefined island symbols to whitelist
+# EXTERNAL FUNCTIONS
+#        None.
+#
+# INITIALIZATION AND SEQUENCING REQUIREMENTS
+#        None.
+#
+# Copyright (c) 2020  by Qualcomm Technologies, Inc.
+# All Rights Reserved.
+# Confidential and Proprietary - Qualcomm Technologies, Inc.
+#=============================================================================
+d2qd
+qd2d
+dsub_asm
+drecip
+dmpy_asm
+dadd_asm
+drecipsqrt

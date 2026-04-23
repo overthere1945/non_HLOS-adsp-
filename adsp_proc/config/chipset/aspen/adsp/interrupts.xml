@@ -1,0 +1,462 @@
+<interrupt>
+  <!-- Interrupt XML Definitions -->
+  <!-- Chip: AspenA -->
+  <!-- Subsystem: Low Power Audio Subsystem -->
+  <!-- Release: aspenA_rtl_partition_v1.0_p3q2r57_tiled_rtl_BTO -->
+  <!-- Generated from IP Catalog on 2025-03-26 02:16:13.275500 -->
+  <irq num="0" trigger="edge" polarity="rising" name="slpc_l2vic_wake_irq" />
+  <irq num="1" trigger="edge" polarity="rising" name="q6ss_isdb_irq" />
+  <irq num="2" trigger="level" polarity="high" name="q6ss_qtmr_irq[0]" />
+  <irq num="3" trigger="level" polarity="high" name="q6ss_qtmr_irq[1]" />
+  <irq num="4" trigger="level" polarity="high" name="q6ss_qtmr_irq[2]" />
+  <irq num="5" trigger="edge" polarity="rising" name="q6ss_etm_irq" />
+  <irq num="6" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii1_irq_1_ToAOSS" pdc="true" pdc_num="32" />
+  <irq num="7" trigger="edge" polarity="rising" name="aop_ipc[6]" pdc="true" pdc_num="2" />
+  <irq num="8" trigger="level" polarity="high" name="lpass_i3c_ibi_manager_irq_1_ToAOSS" pdc="true" pdc_num="35" />
+  <irq num="9" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii1_irq_0_ToAOSS" pdc="true" pdc_num="31" />
+  <irq num="10" trigger="varies" polarity="varies" name="tsens_0C_summ_int" pdc="true" pdc_num="6" />
+  <irq num="11" trigger="level" polarity="high" name="lpass_aud_slimbus_core_ee0_irq" />
+  <irq num="12" trigger="level" polarity="high" name="lpass_aud_slimbus_bam_ee0_irq" />
+  <irq num="13" trigger="level" polarity="high" name="RESERVED_13" />
+  <irq num="14" trigger="level" polarity="high" name="RESERVED_lpass_qca_slimbus_bam_ee0_irq" />
+  <irq num="15" trigger="level" polarity="high" name="ee3_lpass_spmi_periph_irq_0" pdc="true" pdc_num="1" />
+  <irq num="16" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[0]" pdc="true" pdc_num="125" />
+  <irq num="17" trigger="level" polarity="high" name="lpass_hdmitx_interrupt" />
+  <irq num="18" trigger="level" polarity="high" name="audio_pdc_irq_out[7]" />
+  <irq num="19" trigger="level" polarity="high" name="lpass_core_audio_irq_q6" />
+  <irq num="20" trigger="level" polarity="high" name="lpass_core_bus_irq" />
+  <irq num="21" trigger="level" polarity="high" name="lpass_rsc_rsc_error_irq" />
+  <irq num="22" trigger="level" polarity="high" name="lpass_i3c_ibi_manager_irq_2_ToAOSS" pdc="true" pdc_num="36" />
+  <irq num="23" trigger="level" polarity="high" name="dm_irq" />
+  <irq num="24" trigger="level" polarity="high" name="audio_pdc_irq_out[11]" />
+  <irq num="25" trigger="level" polarity="high" name="audio_pdc_irq_out[66]" />
+  <irq num="26" trigger="level" polarity="high" name="RESERVED_26" />
+  <irq num="26" trigger="level" polarity="high" name="RESERVED_29" />
+  <irq num="26" trigger="level" polarity="high" name="RESERVED_35" />
+  <irq num="27" trigger="edge" polarity="rising" name="vfr_0" pdc="true" pdc_num="43" />
+  <irq num="28" trigger="varies" polarity="varies" name="dir_conn_irq_lpa_dsp_modem_2" />
+  <irq num="29" trigger="level" polarity="high" name="lpass_rsc_core_comp_irq[2]" />
+  <irq num="30" trigger="edge" polarity="rising" name="aop_ipc[7]" pdc="true" pdc_num="3" />
+  <irq num="31" trigger="edge" polarity="rising" name="q6ss_cti_irq" />
+  <irq num="32" trigger="edge" polarity="rising" name="q6ss_wdog_irq" />
+  <irq num="33" trigger="level" polarity="high" name="lpass_i3c_ibi_manager_irq_0_ToAOSS" pdc="true" pdc_num="34" />
+  <irq num="34" trigger="level" polarity="high" name="pcie_int_msi_dev4" pdc="true" pdc_num="60" />
+  <irq num="36" trigger="varies" polarity="varies" name="aoss_wakeup_gpio_99" pdc="true" pdc_num="18" />
+  <irq num="37" trigger="varies" polarity="varies" name="adsp_ext_vfr_irq" />
+  <irq num="38" trigger="level" polarity="high" name="va_dma_irq_q6_ext" pdc="true" pdc_num="20" />
+  <irq num="39" trigger="level" polarity="high" name="RESERVED_39" />
+  <irq num="40" trigger="varies" polarity="varies" name="aoss_wakeup_gpio_91" pdc="true" pdc_num="19" />
+  <irq num="41" trigger="level" polarity="high" name="lpass_rsc_core_comp_irq[0]" />
+  <irq num="42" trigger="level" polarity="high" name="RESERVED_42" />
+  <irq num="43" trigger="level" polarity="high" name="hw_af_interrupt" />
+  <irq num="44" trigger="varies" polarity="varies" name="aoss_wakeup_gpio_95" pdc="true" pdc_num="17" />
+  <irq num="45" trigger="varies" polarity="varies" name="aoss_wakeup_gpio_93" pdc="true" pdc_num="21" />
+  <irq num="46" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii1_irq_2_ToAOSS" pdc="true" pdc_num="33" />
+  <irq num="47" trigger="level" polarity="high" name="audio_pdc_irq_out[57]" />
+  <irq num="48" trigger="level" polarity="high" name="usb20s_power_event_irq" pdc="true" pdc_num="65" />
+  <irq num="49" trigger="level" polarity="high" name="audio_pdc_irq_out[0]" />
+  <irq num="50" trigger="level" polarity="high" name="avtimer_int_0" />
+  <irq num="51" trigger="edge" polarity="rising" name="RESERVED_vfr_irq_mux_out[0]" />
+  <irq num="52" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[1]" pdc="true" pdc_num="126" />
+  <irq num="53" trigger="level" polarity="high" name="resampler_irq[1]" />
+  <irq num="54" trigger="level" polarity="high" name="RESERVED_54" />
+  <irq num="55" trigger="level" polarity="high" name="RESERVED_55" />
+  <irq num="56" trigger="edge" polarity="rising" name="APSS_adspIPCInterrupt_2_" pdc="true" pdc_num="73" />
+  <irq num="57" trigger="level" polarity="high" name="RESERVED_57" />
+  <irq num="58" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[2]" pdc="true" pdc_num="127" />
+  <irq num="59" trigger="level" polarity="high" name="RESERVED_59" />
+  <irq num="60" trigger="level" polarity="high" name="RESERVED_60" />
+  <irq num="61" trigger="level" polarity="high" name="RESERVED_61" />
+  <irq num="61" trigger="edge" polarity="rising" name="door_bell_serviced_irq_to_q6" />
+  <irq num="62" trigger="varies" polarity="varies" name="summary_irq_lpa_dsp" pdc="true" pdc_num="46" />
+  <irq num="63" trigger="level" polarity="high" name="audio_pdc_irq_out[12]" />
+  <irq num="64" trigger="edge" polarity="rising" name="mproc_ipc_client_m55_am_irq" pdc="true" pdc_num="58" />
+  <irq num="65" trigger="level" polarity="high" name="audio_pdc_irq_out[56]" />
+  <irq num="66" trigger="varies" polarity="varies" name="dir_conn_irq_lpa_dsp_modem_3" />
+  <irq num="67" trigger="level" polarity="high" name="RESERVED_67" />
+  <irq num="68" trigger="level" polarity="high" name="pcie_int_msi_dev5" pdc="true" pdc_num="61" />
+  <irq num="69" trigger="level" polarity="high" name="timeout_intr_lpass_summary_irq" pdc="true" pdc_num="45" />
+  <irq num="70" trigger="level" polarity="high" name="audio_pdc_irq_out[70]" />
+  <irq num="71" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii0_irq_0_ToAOSS" pdc="true" pdc_num="14" />
+  <irq num="72" trigger="edge" polarity="rising" name="camera_cci_1_irq" />
+  <irq num="73" trigger="edge" polarity="rising" name="camera_tpg_0_irq" />
+  <irq num="75" trigger="edge" polarity="rising" name="RESERVED_lpass_ccd_q6_irq[19]" />
+  <irq num="76" trigger="edge" polarity="rising" name="RESERVED_lpass_ccd_q6_irq[20]" />
+  <irq num="77" trigger="edge" polarity="rising" name="RESERVED_lpass_ccd_q6_irq[21]" />
+  <irq num="78" trigger="level" polarity="high" name="ipc_compute_l0_lpass_irq" pdc="true" pdc_num="41" />
+  <irq num="79" trigger="varies" polarity="varies" name="dir_conn_irq_lpa_dsp_modem_0" />
+  <irq num="80" trigger="edge" polarity="rising" name="mdp_vsync_p_gfx" />
+  <irq num="81" trigger="level" polarity="high" name="RESERVED_ssc_lpass_bus_irq" />
+  <irq num="82" trigger="level" polarity="high" name="RESERVED_82" />
+  <irq num="83" trigger="level" polarity="high" name="RESERVED_83" />
+  <irq num="84" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[3]" pdc="true" pdc_num="128" />
+  <irq num="85" trigger="level" polarity="high" name="RESERVED_85" />
+  <irq num="86" trigger="varies" polarity="varies" name="dir_conn_irq_lpa_dsp_modem_1" />
+  <irq num="87" trigger="level" polarity="high" name="RESERVED_87" />
+  <irq num="88" trigger="level" polarity="high" name="RESERVED_88" />
+  <irq num="88" trigger="edge" polarity="rising" name="APSS_adspIPCInterrupt_3_" pdc="true" pdc_num="74" />
+  <irq num="89" trigger="level" polarity="high" name="RESERVED_89" />
+  <irq num="89" trigger="level" polarity="high" name="audio_pdc_irq_out[59]" />
+  <irq num="90" trigger="level" polarity="high" name="top_qupv3_lpass_summary_irq[0]" pdc="true" pdc_num="49" />
+  <irq num="91" trigger="level" polarity="high" name="top_qupv3_lpass_summary_irq[1]" pdc="true" pdc_num="50" />
+  <irq num="92" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[4]" pdc="true" pdc_num="129" />
+  <irq num="93" trigger="level" polarity="high" name="ssc_lpass_qupv3_lpass_summary_irq[0]" pdc="true" pdc_num="47" />
+  <irq num="94" trigger="level" polarity="high" name="ssc_lpass_qupv3_lpass_summary_irq[1]" pdc="true" pdc_num="48" />
+  <irq num="95" trigger="level" polarity="high" name="RESERVED_95" />
+  <irq num="96" trigger="edge" polarity="rising" name="crypto_core_irq_2" />
+  <irq num="97" trigger="level" polarity="high" name="crypto_bam_irq_2" />
+  <irq num="100" trigger="level" polarity="high" name="top_qupv3_lpass_summary_irq[2]" pdc="true" pdc_num="51" />
+  <irq num="101" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[5]" pdc="true" pdc_num="130" />
+  <irq num="102" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii0_irq_1_ToAOSS" pdc="true" pdc_num="15" />
+  <irq num="103" trigger="level" polarity="high" name="RESERVED_103" />
+  <irq num="104" trigger="level" polarity="high" name="RESERVED_104" />
+  <irq num="105" trigger="level" polarity="high" name="audio_pdc_irq_out[68]" />
+  <irq num="106" trigger="level" polarity="high" name="top_qupv3_lpass_summary_irq[3]" pdc="true" pdc_num="52" />
+  <irq num="107" trigger="level" polarity="high" name="top_qupv3_lpass_summary_irq[4]" pdc="true" pdc_num="53" />
+  <irq num="110" trigger="edge" polarity="rising" name="prb_dma_irq_aoss" pdc="true" pdc_num="37" />
+  <irq num="111" trigger="edge" polarity="rising" name="aad_irq_aoss" pdc="true" pdc_num="38" />
+  <irq num="112" trigger="varies" polarity="varies" name="aoss_wakeup_gpio_105" pdc="true" pdc_num="23" />
+  <irq num="114" trigger="level" polarity="high" name="top_qupv3_ssc_summary_irq[0]" pdc="true" pdc_num="78" />
+  <irq num="115" trigger="varies" polarity="varies" name="aoss_wakeup_gpio_110" pdc="true" pdc_num="25" />
+  <irq num="116" trigger="level" polarity="high" name="lpass_pwrup_req" pdc="true" pdc_num="8" />
+  <irq num="117" trigger="varies" polarity="varies" name="dir_conn_irq_lpa_dsp_4" />
+  <irq num="118" trigger="level" polarity="high" name="top_qupv3_ssc_summary_irq[1]" pdc="true" pdc_num="79" />
+  <irq num="119" trigger="varies" polarity="varies" name="aoss_wakeup_gpio_118" pdc="true" pdc_num="27" />
+  <irq num="120" trigger="level" polarity="high" name="pcie_int_mhi_a7" pdc="true" pdc_num="63" />
+  <irq num="121" trigger="edge" polarity="rising" name="mproc_ipc_client_lpass_irq" pdc="true" pdc_num="80" />
+  <irq num="122" trigger="level" polarity="low" name="lpass_pwrup_req_n" pdc="true" pdc_num="9" />
+  <irq num="123" trigger="level" polarity="high" name="eud_int_mx[5]" pdc="true" pdc_num="10" />
+  <irq num="124" trigger="edge" polarity="rising" name="RESERVED_vfr_irq_mux_out[1]" />
+  <irq num="125" trigger="level" polarity="high" name="audio_pdc_irq_out[29]" />
+  <irq num="126" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[6]" pdc="true" pdc_num="131" />
+  <irq num="127" trigger="edge" polarity="rising" name="APSS_adspIPCInterrupt_1_" pdc="true" pdc_num="72" />
+  <irq num="128" trigger="level" polarity="high" name="va_dma_irq_q6" />
+  <irq num="129" trigger="edge" polarity="rising" name="mdp_vsync_s_gfx" />
+  <irq num="130" trigger="varies" polarity="varies" name="dir_conn_irq_lpa_dsp_5" />
+  <irq num="131" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[7]" pdc="true" pdc_num="132" />
+  <irq num="132" trigger="varies" polarity="varies" name="aoss_wakeup_gpio_107" pdc="true" pdc_num="24" />
+  <irq num="133" trigger="varies" polarity="varies" name="dir_conn_irq_sensors_0" pdc="true" pdc_num="76" />
+  <irq num="134" trigger="varies" polarity="varies" name="dir_conn_irq_sensors_1" pdc="true" pdc_num="77" />
+  <irq num="135" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[8]" pdc="true" pdc_num="133" />
+  <irq num="136" trigger="level" polarity="high" name="audio_pdc_irq_out[5]" />
+  <irq num="137" trigger="varies" polarity="varies" name="aoss_wakeup_gpio_120" pdc="true" pdc_num="26" />
+  <irq num="138" trigger="varies" polarity="varies" name="aoss_wakeup_gpio_103" pdc="true" pdc_num="22" />
+  <irq num="140" trigger="level" polarity="high" name="pcie_int_mhi_q6" pdc="true" pdc_num="62" />
+  <irq num="141" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[9]" pdc="true" pdc_num="134" />
+  <irq num="142" trigger="varies" polarity="varies" name="summary_irq_sensors" pdc="true" pdc_num="75" />
+  <irq num="144" trigger="varies" polarity="varies" name="aoss_cti_trigout" pdc="true" pdc_num="4" />
+  <irq num="145" trigger="edge" polarity="rising" name="vfr_1" pdc="true" pdc_num="44" />
+  <irq num="146" trigger="varies" polarity="varies" name="aoss_wakeup_gpio_116" pdc="true" pdc_num="28" />
+  <irq num="147" trigger="level" polarity="high" name="lcc_pri_ext_clk_detect_inactive_irq" />
+  <irq num="148" trigger="level" polarity="high" name="lcc_sec_ext_clk_detect_inactive_irq" />
+  <irq num="149" trigger="level" polarity="high" name="lcc_ter_ext_clk_detect_inactive_irq" />
+  <irq num="150" trigger="level" polarity="high" name="nav_dr_sync_to_ssc" pdc="true" pdc_num="30" />
+  <irq num="151" trigger="level" polarity="high" name="lcc_audio_gds_hw_ctrl_sequence_abort_irq" />
+  <irq num="152" trigger="level" polarity="high" name="lpass_core_gds_hw_ctrl_sequence_abort_irq" />
+  <irq num="153" trigger="level" polarity="high" name="ipc_periph_lpass_irq" pdc="true" pdc_num="40" />
+  <irq num="154" trigger="edge" polarity="rising" name="mdp_vsync_e_gfx" />
+  <irq num="155" trigger="level" polarity="high" name="top_qupv3_lpass_summary_irq[5]" pdc="true" pdc_num="54" />
+  <irq num="157" trigger="level" polarity="high" name="pcie_global_int" pdc="true" pdc_num="64" />
+  <irq num="158" trigger="edge" polarity="rising" name="APSS_adspIPCInterrupt_0_" pdc="true" pdc_num="71" />
+  <irq num="159" trigger="level" polarity="high" name="codec_ee1_irq[0]" />
+  <irq num="160" trigger="level" polarity="high" name="codec_wsa_swr_irq[0]" />
+  <irq num="161" trigger="level" polarity="high" name="codec_tx_swr_irq[0]" />
+  <irq num="162" trigger="level" polarity="high" name="codec_rx_swr_irq[0]" />
+  <irq num="163" trigger="level" polarity="high" name="codec_ee0_irq[0]" />
+  <irq num="164" trigger="level" polarity="high" name="lpass_audio_lpaif_rxtx_out2_irq" />
+  <irq num="165" trigger="level" polarity="high" name="lpass_audio_lpaif_wsa_out2_irq" />
+  <irq num="166" trigger="level" polarity="high" name="audio_pdc_irq_out[69]" />
+  <irq num="167" trigger="level" polarity="high" name="q6ss_rsc_prof_irq" />
+  <irq num="168" trigger="level" polarity="high" name="lpi_bus_irq" />
+  <irq num="170" trigger="level" polarity="high" name="audio_pdc_irq_out[67]" />
+  <irq num="171" trigger="level" polarity="high" name="lpass_aon_mx_cc_ext_if1_ext_clk_detect_inactive_irq" />
+  <irq num="172" trigger="level" polarity="high" name="lpass_audio_cc_ext_if2_ext_clk_detect_inactive_irq" />
+  <irq num="173" trigger="level" polarity="high" name="lpass_audio_cc_ext_if1_ext_clk_detect_inactive_irq" />
+  <irq num="174" trigger="level" polarity="high" name="lpass_audio_bus_irq" />
+  <irq num="177" trigger="edge" polarity="rising" name="camera_camnoc_irq" />
+  <irq num="178" trigger="edge" polarity="rising" name="camera_cci_0_irq" />
+  <irq num="179" trigger="edge" polarity="rising" name="camera_cdm_irq" />
+  <irq num="182" trigger="edge" polarity="rising" name="camera_tfe_0_csid_irq" />
+  <irq num="183" trigger="edge" polarity="rising" name="camera_tfe_0_irq" />
+  <irq num="184" trigger="edge" polarity="rising" name="camera_tfe_1_csid_irq" />
+  <irq num="185" trigger="edge" polarity="rising" name="camera_tfe_1_irq" />
+  <irq num="188" trigger="edge" polarity="rising" name="camera_ope_cdm_irq" />
+  <irq num="189" trigger="edge" polarity="rising" name="camera_ope_irq" />
+  <irq num="203" trigger="edge" polarity="rising" name="mproc_ipc_client_m55_irq" pdc="true" pdc_num="81" />
+  <irq num="204" trigger="level" polarity="high" name="ipc_fence_lpass_irq" pdc="true" pdc_num="82" />
+  <irq num="205" trigger="edge" polarity="rising" name="RESERVED_205" />
+  <irq num="206" trigger="level" polarity="high" name="lpass_audio_ahbi_bus_timeout_irq" />
+  <irq num="207" trigger="level" polarity="high" name="lpass_va_ahbi_bus_timeout_irq" />
+  <irq num="208" trigger="level" polarity="high" name="ipc_compute_l1_lpass_irq" pdc="true" pdc_num="42" />
+  <irq num="209" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[10]" pdc="true" pdc_num="135" />
+  <irq num="210" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[11]" pdc="true" pdc_num="136" />
+  <irq num="211" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[12]" pdc="true" pdc_num="137" />
+  <irq num="212" trigger="level" polarity="high" name="usb20s_ctrl_irq[2]" pdc="true" pdc_num="55" />
+  <irq num="213" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[13]" pdc="true" pdc_num="138" />
+  <irq num="214" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[14]" pdc="true" pdc_num="139" />
+  <irq num="215" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[15]" pdc="true" pdc_num="140" />
+  <irq num="216" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[16]" pdc="true" pdc_num="141" />
+  <irq num="217" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[17]" pdc="true" pdc_num="142" />
+  <irq num="218" trigger="edge" polarity="rising" name="qtmr_lpass_phy_irq[0]" />
+  <irq num="219" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[18]" pdc="true" pdc_num="143" />
+  <irq num="220" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[19]" pdc="true" pdc_num="144" />
+  <irq num="222" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[20]" pdc="true" pdc_num="145" />
+  <irq num="223" trigger="level" polarity="high" name="lpass_cpr_irq" />
+  <irq num="224" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii0_irq_2_ToAOSS" pdc="true" pdc_num="16" />
+  <irq num="225" trigger="level" polarity="high" name="seq_us_event_comp" pdc="true" pdc_num="13" />
+  <irq num="226" trigger="level" polarity="high" name="audio_pdc_irq_out[39]" />
+  <irq num="227" trigger="level" polarity="high" name="qdsp6_iso_m1_reqpend" />
+  <irq num="228" trigger="level" polarity="high" name="qdsp6_iso_axim2_reqpend" />
+  <irq num="231" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[21]" pdc="true" pdc_num="146" />
+  <irq num="232" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[22]" pdc="true" pdc_num="147" />
+  <irq num="233" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[23]" pdc="true" pdc_num="148" />
+  <irq num="234" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[24]" pdc="true" pdc_num="149" />
+  <irq num="235" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[25]" pdc="true" pdc_num="150" />
+  <irq num="236" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[26]" pdc="true" pdc_num="151" />
+  <irq num="237" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[27]" pdc="true" pdc_num="152" />
+  <irq num="238" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[28]" pdc="true" pdc_num="153" />
+  <irq num="239" trigger="level" polarity="high" name="audio_pdc.gp_irq_mux[29]" pdc="true" pdc_num="154" />
+  <irq num="243" trigger="level" polarity="high" name="SidebandManager_lpinoc_lpimxFault" />
+  <irq num="244" trigger="edge" polarity="rising" name="lpmla0_irq" />
+  <irq num="245" trigger="edge" polarity="rising" name="lpmla0_job1_done_irq_src" />
+  <irq num="246" trigger="edge" polarity="rising" name="lpmla0_job2_done_irq_src" />
+  <irq num="247" trigger="edge" polarity="rising" name="lpmla0_job3_done_irq_src" />
+  <irq num="248" trigger="edge" polarity="rising" name="lpmla0_job4_done_irq_src" />
+  <irq num="249" trigger="level" polarity="high" name="lpi_noc_SidebandManagerFault" />
+  <irq num="250" trigger="level" polarity="high" name="lpass_dp2_interrupt" />
+  <irq num="251" trigger="level" polarity="high" name="RESERVED_lpaif_hs_irq_q6" />
+  <irq num="252" trigger="level" polarity="high" name="RESERVED_lcc_hs_if_0_ext_clk_detect_inactive_irq" />
+  <irq num="253" trigger="level" polarity="high" name="RESERVED_lcc_hs_if_1_ext_clk_detect_inactive_irq" />
+  <irq num="254" trigger="level" polarity="high" name="RESERVED_lcc_hs_if_2_ext_clk_detect_inactive_irq" />
+  <irq num="255" trigger="level" polarity="high" name="lpass_audio_cc_ext_if4_ext_clk_detect_inactive_irq" />
+  <irq num="256" trigger="varies" polarity="varies" name="channel3_lpass_trans_done_irq_0" pdc="true" pdc_num="83" />
+  <irq num="257" trigger="level" polarity="high" name="channel6_m55_0_trans_done_irq" pdc="true" pdc_num="84" />
+  <irq num="258" trigger="level" polarity="high" name="channel9_m55_1_trans_done_irq" pdc="true" pdc_num="85" />
+  <irq num="259" trigger="level" polarity="high" name="audio_pdc_irq_out[86]" />
+  <irq num="260" trigger="level" polarity="high" name="ee9_m55_1_spmi_periph_irq" pdc="true" pdc_num="87" />
+  <irq num="261" trigger="level" polarity="high" name="ee6_m55_0_spmi_periph_irq" pdc="true" pdc_num="88" />
+  <irq num="262" trigger="level" polarity="high" name="audio_pdc_irq_out[89]" />
+  <irq num="263" trigger="level" polarity="high" name="codec_ee2_irq[0]" />
+  <irq num="264" trigger="level" polarity="high" name="codec_wsa2_swr_irq[0]" />
+  <irq num="265" trigger="level" polarity="high" name="lpaif_aud_irq_q6" />
+  <irq num="267" trigger="level" polarity="high" name="RESERVED_lcc_hs_if_3_ext_clk_detect_inactive_irq" />
+  <irq num="268" trigger="level" polarity="high" name="RESERVED_lcc_hs_if_4_ext_clk_detect_inactive_irq" />
+  <irq num="269" trigger="level" polarity="high" name="RESERVED_aud_avtimer_int0_irq" />
+  <irq num="278" trigger="edge" polarity="rising" name="lpass_icbc_timeout_irq" />
+  <irq num="279" trigger="level" polarity="high" name="lpass_audio_cc_ext_if5_ext_clk_detect_inactive_irq" />
+  <irq num="280" trigger="level" polarity="high" name="lpass_audio_lpaif_wsa2_out2_irq" />
+  <irq num="281" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[0]" />
+  <irq num="281" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[0]" />
+  <irq num="282" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[1]" />
+  <irq num="282" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[1]" />
+  <irq num="283" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[2]" />
+  <irq num="283" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[2]" />
+  <irq num="284" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[3]" />
+  <irq num="284" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[3]" />
+  <irq num="285" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[4]" />
+  <irq num="285" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[4]" />
+  <irq num="286" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[5]" />
+  <irq num="286" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[5]" />
+  <irq num="287" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[6]" />
+  <irq num="287" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[6]" />
+  <irq num="288" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[7]" />
+  <irq num="288" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[7]" />
+  <irq num="289" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[8]" />
+  <irq num="289" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[8]" />
+  <irq num="290" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[9]" />
+  <irq num="290" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[9]" />
+  <irq num="291" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[10]" />
+  <irq num="291" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[10]" />
+  <irq num="292" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[11]" />
+  <irq num="292" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[11]" />
+  <irq num="293" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[12]" />
+  <irq num="293" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[12]" />
+  <irq num="294" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[13]" />
+  <irq num="294" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[13]" />
+  <irq num="295" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[14]" />
+  <irq num="295" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[14]" />
+  <irq num="296" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[15]" />
+  <irq num="296" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_gsi_irq[15]" />
+  <irq num="297" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[8]" />
+  <irq num="297" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[8]" />
+  <irq num="298" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[7]" />
+  <irq num="298" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[7]" />
+  <irq num="299" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[0]" />
+  <irq num="299" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[0]" />
+  <irq num="300" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[1]" />
+  <irq num="300" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[1]" />
+  <irq num="301" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[2]" />
+  <irq num="301" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[2]" />
+  <irq num="302" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[3]" />
+  <irq num="302" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[3]" />
+  <irq num="303" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[4]" />
+  <irq num="303" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[4]" />
+  <irq num="304" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[5]" />
+  <irq num="304" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[5]" />
+  <irq num="305" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[6]" />
+  <irq num="305" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[6]" />
+  <irq num="306" trigger="edge" polarity="rising" name="qtmr_lpass_virt_irq[0]" />
+  <irq num="307" trigger="level" polarity="high" name="vsense_ssc_q6_alarm_irq" />
+  <irq num="308" trigger="level" polarity="high" name="vsense_ssc_q6_alarm_irq" />
+  <irq num="309" trigger="edge" polarity="rising" name="vsw_lpass_q6_alarm_cx_irq" />
+  <irq num="310" trigger="edge" polarity="rising" name="vsw_lpass_q6_alarm_mx_irq" />
+  <irq num="311" trigger="edge" polarity="rising" name="swm_cti_intisr[0]" />
+  <irq num="312" trigger="edge" polarity="rising" name="swm_ipc[0]" />
+  <irq num="313" trigger="edge" polarity="rising" name="swm_ipc[1]" />
+  <irq num="314" trigger="edge" polarity="rising" name="swm_ipc[2]" />
+  <irq num="315" trigger="edge" polarity="rising" name="swm_ipc[3]" />
+  <irq num="316" trigger="edge" polarity="rising" name="swm_wdog_expired_irq" />
+  <irq num="317" trigger="edge" polarity="rising" name="swm_wdog_bark_irq" />
+  <irq num="318" trigger="edge" polarity="rising" name="swm_gpo[0]" />
+  <irq num="319" trigger="edge" polarity="rising" name="swm_gpo[1]" />
+  <irq num="320" trigger="edge" polarity="rising" name="swm_gpo[2]" />
+  <irq num="321" trigger="edge" polarity="rising" name="swm_gpo[3]" />
+  <irq num="322" trigger="edge" polarity="rising" name="swm_gpo[4]" />
+  <irq num="323" trigger="edge" polarity="rising" name="swm_gpo[5]" />
+  <irq num="324" trigger="edge" polarity="rising" name="swm_gpo[6]" />
+  <irq num="325" trigger="edge" polarity="rising" name="swm_gpo[7]" />
+  <irq num="326" trigger="edge" polarity="rising" name="qtmr_am_lpass_phy_irq[0]" />
+  <irq num="327" trigger="edge" polarity="rising" name="qtmr_am_lpass_virt_irq[0]" />
+  <irq num="334" trigger="edge" polarity="rising" name="~swm_gpo[16]" />
+  <irq num="335" trigger="edge" polarity="rising" name="~swm_gpo[17]" />
+  <irq num="336" trigger="edge" polarity="rising" name="~swm_gpo[18]" />
+  <irq num="337" trigger="edge" polarity="rising" name="~swm_gpo[19]" />
+  <irq num="338" trigger="edge" polarity="rising" name="~swm_gpo[20]" />
+  <irq num="339" trigger="edge" polarity="rising" name="~swm_gpo[21]" />
+  <irq num="340" trigger="edge" polarity="rising" name="~swm_gpo[22]" />
+  <irq num="341" trigger="edge" polarity="rising" name="~swm_gpo[23]" />
+  <irq num="350" trigger="level" polarity="high" name="qsb_prefetch_wr_err_intr_0_" />
+  <irq num="351" trigger="level" polarity="high" name="qsb_prefetch_wr_err_intr_1_" />
+  <irq num="352" trigger="level" polarity="high" name="qsb_prefetch_wr_err_intr_2_" />
+  <irq num="353" trigger="level" polarity="high" name="qsb_prefetch_wr_err_intr_3_" />
+  <irq num="354" trigger="level" polarity="high" name="qsb_prefetch_wr_err_intr_4_" />
+  <irq num="355" trigger="level" polarity="high" name="qsb_prefetch_wr_err_intr_5_" />
+  <irq num="357" trigger="edge" polarity="rising" name="RESERVED_lpass_ccd_q6_irq[7]" />
+  <irq num="358" trigger="edge" polarity="rising" name="RESERVED_lpass_ccd_q6_irq[8]" />
+  <irq num="359" trigger="edge" polarity="rising" name="RESERVED_lpass_ccd_q6_irq[9]" />
+  <irq num="360" trigger="edge" polarity="rising" name="RESERVED_lpass_ccd_q6_irq[10]" />
+  <irq num="361" trigger="edge" polarity="rising" name="RESERVED_lpass_ccd_q6_irq[11]" />
+  <irq num="362" trigger="edge" polarity="rising" name="RESERVED_lpass_ccd_q6_irq[12]" />
+  <irq num="363" trigger="edge" polarity="rising" name="RESERVED_lpass_ccd_q6_irq[13]" />
+  <irq num="364" trigger="edge" polarity="rising" name="RESERVED_lpass_ccd_q6_irq[14]" />
+  <irq num="365" trigger="edge" polarity="rising" name="RESERVED_lpass_ccd_q6_irq[15]" />
+  <irq num="366" trigger="edge" polarity="rising" name="RESERVED_lpass_ccd_q6_irq[16]" />
+  <irq num="367" trigger="edge" polarity="rising" name="RESERVED_lpass_ccd_q6_irq[17]" />
+  <irq num="368" trigger="edge" polarity="rising" name="RESERVED_lpass_ccd_q6_irq[18]" />
+  <irq num="369" trigger="level" polarity="high" name="wdss_gpu_gds_hw_ctrl_irq" />
+  <irq num="372" trigger="level" polarity="high" name="lpi_trace_noc_err_irq" />
+  <irq num="373" trigger="level" polarity="high" name="lpi_aon_noc_SidebandManagerFault" />
+  <irq num="374" trigger="edge" polarity="rising" name="RESERVED_lpass_lpass_bus_irq" />
+  <irq num="375" trigger="edge" polarity="rising" name="RESERVED_375" />
+  <irq num="376" trigger="edge" polarity="rising" name="lpmla1_irq" />
+  <irq num="377" trigger="edge" polarity="rising" name="lpmla1_job1_done_irq_src" />
+  <irq num="378" trigger="edge" polarity="rising" name="lpmla1_job2_done_irq_src" />
+  <irq num="379" trigger="edge" polarity="rising" name="lpmla1_job3_done_irq_src" />
+  <irq num="380" trigger="edge" polarity="rising" name="lpmla1_job4_done_irq_src" />
+  <irq num="381" trigger="level" polarity="high" name="lpass_audio_ahbl_bus_timeout_irq" />
+  <irq num="382" trigger="edge" polarity="rising" name="seq_hap_event_comp" />
+  <irq num="383" trigger="edge" polarity="rising" name="va_intr1" />
+  <irq num="384" trigger="edge" polarity="rising" name="lcc_enpu0_apcs_gds_hw_ctrl_sequence_abort_irq" />
+  <irq num="385" trigger="edge" polarity="rising" name="lcc_enpu1_apcs_gds_hw_ctrl_sequence_abort_irq" />
+  <irq num="386" trigger="edge" polarity="rising" name="lcc_lpicx_noc_chip_cx_qchannel_gds_hw_ctrl_sequence_abort_irq" />
+  <irq num="388" trigger="level" polarity="high" name="RESERVED_388" />
+  <irq num="389" trigger="edge" polarity="rising" name="seq_done_intr" />
+  <irq num="390" trigger="edge" polarity="rising" name="seq_err_intr" />
+  <irq num="391" trigger="edge" polarity="rising" name="seq_intr_out[0]" />
+  <irq num="392" trigger="edge" polarity="rising" name="seq_intr_out[1]" />
+  <irq num="393" trigger="edge" polarity="rising" name="tcm_error_irq" />
+  <irq num="394" trigger="edge" polarity="rising" name="lcc_pdc_hm_gds_hw_ctrl_sequence_abort_irq" />
+  <irq num="395" trigger="edge" polarity="rising" name="lcc_aon_noc_chip_cx_qchannel_gds_hw_ctrl_sequence_abort_irq" />
+  <irq num="396" trigger="edge" polarity="rising" name="lcc_aon_noc_gds_hw_ctrl_sequence_abort_irq" />
+  <irq num="397" trigger="edge" polarity="rising" name="lcc_aon_cam_gds_hw_ctrl_sequence_abort_irq" />
+  <irq num="398" trigger="edge" polarity="rising" name="lcc_ssc_gds_hw_ctrl_sequence_abort_irq" />
+  <irq num="399" trigger="level" polarity="high" name="hw_af_noc_ErrorLoggerFault" />
+  <irq num="400" trigger="level" polarity="high" name="lpass_ag_noc_sidebandmanagerfault" />
+  <irq num="401" trigger="level" polarity="high" name="lpass_core_ahbl_timeout_irq" />
+  <irq num="402" trigger="level" polarity="high" name="lpass_core_ahbi_timeout_irq" />
+  <irq num="403" trigger="level" polarity="high" name="SidebandManager_lpicx_chipcxFault" />
+  <irq num="404" trigger="level" polarity="high" name="SidebandManager_lpiaon_chipcxFault" />
+  <irq num="405" trigger="level" polarity="high" name="seq_us_event_comp" />
+  <irq num="406" trigger="varies" polarity="varies" name="aoss_wakeup_gpio_122" pdc="true" pdc_num="90" />
+  <irq num="407" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii0_irq_7_ToAOSS" pdc="true" pdc_num="91" />
+  <irq num="408" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii0_irq_8_ToAOSS" pdc="true" pdc_num="92" />
+  <irq num="409" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii0_irq_9_ToAOSS" pdc="true" pdc_num="93" />
+  <irq num="410" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii1_irq_7_ToAOSS" pdc="true" pdc_num="94" />
+  <irq num="411" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii1_irq_8_ToAOSS" pdc="true" pdc_num="95" />
+  <irq num="412" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii1_irq_9_ToAOSS" pdc="true" pdc_num="96" />
+  <irq num="413" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii0_irq_3_ToAOSS" pdc="true" pdc_num="97" />
+  <irq num="414" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii0_irq_4_ToAOSS" pdc="true" pdc_num="98" />
+  <irq num="415" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii0_irq_5_ToAOSS" pdc="true" pdc_num="99" />
+  <irq num="416" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii0_irq_6_ToAOSS" pdc="true" pdc_num="100" />
+  <irq num="417" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii1_irq_3_ToAOSS" pdc="true" pdc_num="101" />
+  <irq num="418" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii1_irq_4_ToAOSS" pdc="true" pdc_num="102" />
+  <irq num="419" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii1_irq_5_ToAOSS" pdc="true" pdc_num="103" />
+  <irq num="420" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii1_irq_6_ToAOSS" pdc="true" pdc_num="104" />
+  <irq num="421" trigger="level" polarity="high" name="lpass_i3c_ibi_manager_irq_3_ToAOSS" pdc="true" pdc_num="105" />
+  <irq num="422" trigger="level" polarity="high" name="lpass_i3c_ibi_manager_irq_4_ToAOSS" pdc="true" pdc_num="106" />
+  <irq num="423" trigger="level" polarity="high" name="lpass_i3c_ibi_manager_irq_5_ToAOSS" pdc="true" pdc_num="107" />
+  <irq num="424" trigger="level" polarity="high" name="lpass_i3c_ibi_manager_irq_6_ToAOSS" pdc="true" pdc_num="108" />
+  <irq num="425" trigger="level" polarity="high" name="lpass_i3c_ibi_manager_irq_7_ToAOSS" pdc="true" pdc_num="109" />
+  <irq num="426" trigger="level" polarity="high" name="lpass_i3c_ibi_manager_irq_8_ToAOSS" pdc="true" pdc_num="110" />
+  <irq num="427" trigger="level" polarity="high" name="lpass_i3c_ibi_manager_irq_9_ToAOSS" pdc="true" pdc_num="111" />
+  <irq num="428" trigger="level" polarity="high" name="RESERVED_428" />
+  <irq num="432" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[9]" />
+  <irq num="432" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[9]" />
+  <irq num="433" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[10]" />
+  <irq num="433" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[10]" />
+  <irq num="434" trigger="level" polarity="high" name="lpass_enpu1_noc_SidebandManager_Fault" />
+  <irq num="435" trigger="level" polarity="high" name="lpass_enpu2_noc_SidebandManager_Fault" />
+  <irq num="436" trigger="level" polarity="high" name="eNPU_scheduler_dsp_irq" />
+  <irq num="437" trigger="level" polarity="high" name="bt_swr_irq[0]" />
+  <irq num="455" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[11]" />
+  <irq num="455" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[11]" />
+  <irq num="456" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[12]" />
+  <irq num="456" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[12]" />
+  <irq num="457" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[13]" />
+  <irq num="457" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[13]" />
+  <irq num="458" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[14]" />
+  <irq num="458" trigger="edge" polarity="rising" name="lpass_qupv3_sensor_se_irq[14]" />
+  <irq num="459" trigger="edge" polarity="rising" name="prb_dma_done_irq" />
+  <irq num="460" trigger="level" polarity="high" name="swm_bus_timeout_irq" />
+  <irq num="461" trigger="level" polarity="high" name="lpass_rsc_core_comp_irq[1]" />
+  <irq num="462" trigger="edge" polarity="rising" name="wm_ee_mode_change_irq" />
+  <irq num="466" trigger="level" polarity="high" name="qmspi_irq" />
+  <irq num="469" trigger="level" polarity="high" name="crypto_bam_irq_2" />
+  <irq num="472" trigger="edge" polarity="rising" name="crypto_core_irq_2" />
+  <irq num="473" trigger="level" polarity="high" name="awm_bus_timeout_irq" />
+  <irq num="474" trigger="edge" polarity="rising" name="am_ee_mode_change_irq" />
+  <irq num="480" trigger="level" polarity="high" name="cesta_vote_comp_irq[1]" />
+  <irq num="481" trigger="edge" polarity="rising" name="awm_cti_intisr[0]" />
+  <irq num="482" trigger="edge" polarity="rising" name="awm_ipc[0]" />
+  <irq num="483" trigger="edge" polarity="rising" name="awm_ipc[1]" />
+  <irq num="484" trigger="edge" polarity="rising" name="awm_ipc[2]" />
+  <irq num="485" trigger="edge" polarity="rising" name="awm_ipc[3]" />
+  <irq num="486" trigger="edge" polarity="rising" name="awm_wdog_expired_irq" />
+  <irq num="487" trigger="edge" polarity="rising" name="awm_wdog_bark_irq" />
+  <irq num="488" trigger="edge" polarity="rising" name="awm_gpo[0]" />
+  <irq num="489" trigger="edge" polarity="rising" name="awm_gpo[1]" />
+  <irq num="490" trigger="edge" polarity="rising" name="awm_gpo[2]" />
+  <irq num="491" trigger="edge" polarity="rising" name="awm_gpo[3]" />
+  <irq num="492" trigger="edge" polarity="rising" name="awm_gpo[4]" />
+  <irq num="493" trigger="edge" polarity="rising" name="awm_gpo[5]" />
+  <irq num="494" trigger="edge" polarity="rising" name="awm_gpo[6]" />
+  <irq num="495" trigger="edge" polarity="rising" name="awm_gpo[7]" />
+  <irq num="504" trigger="edge" polarity="rising" name="~awm_gpo[16]" />
+  <irq num="505" trigger="edge" polarity="rising" name="~awm_gpo[17]" />
+  <irq num="506" trigger="edge" polarity="rising" name="~awm_gpo[18]" />
+  <irq num="507" trigger="edge" polarity="rising" name="~awm_gpo[19]" />
+  <irq num="508" trigger="edge" polarity="rising" name="~awm_gpo[20]" />
+  <irq num="509" trigger="edge" polarity="rising" name="~awm_gpo[21]" />
+  <irq num="510" trigger="edge" polarity="rising" name="~awm_gpo[22]" />
+  <irq num="511" trigger="edge" polarity="rising" name="~awm_gpo[23]" />
+  <irq num="520" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii2_irq[0]" pdc="true" pdc_num="113" />
+  <irq num="521" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii2_irq[1]" pdc="true" pdc_num="114" />
+  <irq num="522" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii2_irq[2]" pdc="true" pdc_num="115" />
+  <irq num="523" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii2_irq[3]" pdc="true" pdc_num="116" />
+  <irq num="524" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii2_irq[4]" pdc="true" pdc_num="117" />
+  <irq num="525" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii2_irq[5]" pdc="true" pdc_num="118" />
+  <irq num="526" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii2_irq[6]" pdc="true" pdc_num="119" />
+  <irq num="527" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii2_irq[7]" pdc="true" pdc_num="120" />
+  <irq num="528" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii2_irq[8]" pdc="true" pdc_num="121" />
+  <irq num="529" trigger="level" polarity="high" name="lpass_i3c_ibi_gpii2_irq[9]" pdc="true" pdc_num="122" />
+</interrupt>

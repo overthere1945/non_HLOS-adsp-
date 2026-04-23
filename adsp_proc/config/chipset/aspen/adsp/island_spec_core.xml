@@ -1,0 +1,25 @@
+  <irq num="0"/>  <!-- PMI TBD-->
+  <irq num="2"/>  <!-- q6ss_qtmr_irq[0] -->
+  <irq num="4"/>  <!-- qTimer frame 3 TBD-->
+  <irq num="31"/>  <!-- CTI interrupt -->
+  <irq num="32"/> <!-- HW DOG Bark interrupt -->
+  <irq num="41"/> <!-- lpass_rsc_core_comp_irq -->
+  <memory_phys base="0x21480000" size="0x40000"/> <!-- Covers QTMR register -->
+  <memory_virt base="0xe0000000" size="0xF0000"/> <!-- CLK_CNTL -->
+  <memory_virt base="0xf7400000" size="0x0900000"/> <!-- LPASS base -->
+  <memory_virt base="0xf7e2a000" size="0x00020000"/> <!-- LPASS PRB QTMR -->
+  <memory_phys base="0x21E30000" size="0x10000"/> <!-- LPASS_ICB_REGION for Island-to-island-->
+  <memory_phys base="0x21D00000" size="0x100000"/> <!-- LPASS_STM stimulus ports region -->
+  <memory_virt base="0xf7f00000" size="0x00200000"/> <!-- LPI_AON, LPI_CX, WDSS-->
+  <memory_phys base="0x21AE0000" size="0x10000 "/>  <!-- LPASS_MCC_LPASS_REG -->
+  <memory_virt base="0xF8100000" size="0x100000"/> <!-- SSC TLMM_CNTL -->
+  <memory_virt base="0xf8800000" size="0x400000"/> <!-- SSC CLK_CNTL -->
+  <memory_phys base="0x21E6C000" size="0x5000"/> <!-- LPASS_ENPU_SCH_REG -->
+  <memory_virt base="0Xf8300000" size="0x0100000"/> <!-- SSC TLMM_CNTL-->
+  <physical_pool name="TCM_PHYSPOOL"/>
+  <physical_pool name="EAI_ISLANDPOOL"/>
+  <physical_pool name="GLINK_ISLAND_POOL"/>
+  <physical_pool name="SHARED_ISLAND_LPASS_TCM_POOL"/> 
+  <physical_pool name="QURTOS_ISLAND_POOL" linelock="true"/>
+  <dynamic_irqs num="6"/> <!-- GPIO interrupts -->
+  <dynamic_memranges num="5"/> <!-- QDSS HWIO regions -->

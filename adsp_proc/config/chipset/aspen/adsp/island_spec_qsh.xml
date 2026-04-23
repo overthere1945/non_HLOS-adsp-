@@ -1,0 +1,6 @@
+  <physical_pool name="SSC_ISLAND_POOL"/>
+  <physical_pool name="SSC_PRAM"/>
+  <physical_pool name="SDC_ISLAND_POOL"/>
+  <physical_pool name="IPC_MEM"/>
+  <dynamic_irqs num="29"/>
+  <!-- 7 Sensor GPIO interrupts + 22 CCD-Q6 interrupts = 29 -->

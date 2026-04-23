@@ -1,0 +1,12 @@
+<irq num="369"/>  <!-- ssc_aon_cam_irq -->
+<irq num="370"/>  <!-- ssc_aon_cam_csid_irq -->
+<irq num="371"/>  <!-- ssc_aon_cam_csiphy_irq  -->
+<irq num="429"/>  <!-- ssc_aon_cam_1_irq -->
+<irq num="430"/>  <!-- ssc_aon_cam_csid_1_irq -->
+<irq num="431"/>  <!-- ssc_aon_cam_csiphy_1_irq  -->
+<irq num="454"/>  <!-- ssc_aon_cam_top_irq -->
+<memory_phys base="0x07300000" size="0x38000"/> <!-- SSC_TITAN_AON_CAM -->
+<physical_pool name="CAM_ISLAND_LPASS_TCM_POOL"/>
+<physical_pool name="CAM_LLCC_ISLAND1_POOL" dynamic="true"/>
+<physical_pool name="CAM_LLCC_ISLAND2_POOL" dynamic="true"/>
+<dynamic_irqs num="2"/> <!-- Dynamic GPIO INT -->

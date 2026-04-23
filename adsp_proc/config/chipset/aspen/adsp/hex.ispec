@@ -1,0 +1,35 @@
+#
+#  This file contains the list of things to go into the island.
+#  Each line consists of LIBRARY-NAME OBJECT-NAME SECTION-NAME
+#   where an asterisk (*) represents a wildcard.
+#  Note that section names are not yet supported by the
+#   tools, but will be in the future.
+#
+*libc.a abs.o *
+*libc.a fmemcpy.o *
+*libc.a memcpy.o *
+*libc.a memcmp.o *
+*libc.a memmove.o *
+*libc.a memset.o *
+*libc.a memset_s.o *
+*libc.a rmemcpy.o *
+*libc.a strlcpy.o *
+*libc.a strlen.o *
+*libc.a strcmp.o *
+*libc.a strncmp.o *
+*libc.a strnlen.o *
+*libc.a strlcat.o *
+*libqcc.a common_entry_exit_abi2.o *
+*libqcc.a memcpy_likely_aligned.o *
+*libqcc.a qdsp_udivdi3.o *
+*libqcc.a qdsp_udivsi3.o *
+*libqcc.a qdsp_umoddi3.o *
+*libqcc.a qdsp_umodsi3.o *
+*libqcc.a qdsp_modsi3.o *
+*libqcc.a qdsp_divdi3.o *
+*libqcc.a qdsp_divsi3.o *
+*libqcc.a fastmath_qdouble.o *
+*libqcc.a hexagon_dfdiv.o *
+*libclang_rt.lwubsan-hexagon.a * *
+
+

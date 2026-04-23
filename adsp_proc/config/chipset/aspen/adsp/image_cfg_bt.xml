@@ -1,0 +1,24 @@
+<devcfg>
+    <blobs>
+        <blob id="core_aspen_xml" name="DALPROP_PropsInfo_aspen_bt_core_libs" type="ram"/>
+        <blob id="aspen_xml" name="DALPROP_PropsInfo_aspen_bt" type="ram"/>
+    </blobs>
+
+    <blob_mappings>
+        <mapping id="core_aspen_xml" stage="0" soc_id="40978"/>
+        <mapping id="aspen_xml" stage="0" soc_id="40978"/>
+    </blob_mappings>
+
+    <image>
+        <target_img value="bt_img"/>
+        <devcfg_target_build_id value="DEVCFG_CORE_QDSP6_BT_SW"/>
+        <dal_config_target_id value="0x0"/>
+        <tcsr_soc_hw_version addr="0x01FC8000" direct="false"/>
+        <multiCfg value="true"/>
+        <memory>
+            <props_memory_optimisation value="true"/>
+            <size_of_struct value="true"/>
+            <hw_version_specific_props value="true"/>
+        </memory>
+    </image>
+</devcfg>

@@ -1,0 +1,384 @@
+/*
+ * 파일명: sns_himax_dsp_sensor_instance.c
+ * 목적 및 기능: ADSP 환경에서 Himax DSP와 SPI(Instance 5) 통신을 수행하여, 
+ * 인터럽트(GPIO 102) 발생 시 헤더를 파싱하고 동적 크기의 JPEG를 공유 메모리에 씁니다.
+ * SPI Full-Duplex(simple_rw) 방식을 적용하여 첫 바이트(0xC0) 유실 문제를 해결하고자 합니다.
+ */
+
+/*==============================================================================
+  Include Files
+  ============================================================================*/
+// 메모리 유틸리티 관련 헤더 포함
+#include "sns_mem_util.h"
+// 센서 인스턴스 코어 기능 헤더 포함
+#include "sns_sensor_instance.h"
+// 서비스 매니저 헤더 포함
+#include "sns_service_manager.h"
+// 데이터 스트림 서비스 헤더 포함
+#include "sns_stream_service.h"
+// 리턴 코드(RC) 정의 헤더 포함
+#include "sns_rc.h"
+// 요청(Request) 처리 관련 헤더 포함
+#include "sns_request.h"
+// 시간 측정 및 관리 헤더 포함
+#include "sns_time.h"
+// 센서 이벤트 처리 헤더 포함
+#include "sns_sensor_event.h"
+// 기본 자료형 정의 헤더 포함
+#include "sns_types.h"
+// 이벤트 서비스 헤더 포함
+#include "sns_event_service.h"
+// 메모리 매니저 헤더 포함
+#include "sns_memmgr.h"
+// COM 포트 프라이빗 API 헤더 포함
+#include "sns_com_port_priv.h"
+
+// Himax DSP 센서 전용 헤더 포함
+#include "sns_himax_dsp_sensor.h"
+// Himax DSP 센서 인스턴스 전용 헤더 포함
+#include "sns_himax_dsp_sensor_instance.h"
+
+// 인터럽트 프로토콜 버퍼 헤더 포함
+#include "sns_interrupt.pb.h"
+// 비동기 COM 포트 프로토콜 버퍼 헤더 포함
+#include "sns_async_com_port.pb.h"
+
+// 프로토콜 버퍼 인코딩/디코딩 헤더 포함
+#include "pb_encode.h"
+#include "pb_decode.h"
+// 센서 PB 유틸리티 헤더 포함
+#include "sns_pb_util.h"
+
+// sns_sensor_util_remove_sensor_stream API 선언을 위해 헤더 추가
+#include "sns_sensor_util.h"
+
+/*==============================================================================
+  Function Definitions
+  ============================================================================*/
+
+/*
+ * 함수명: simple_rw
+ * 목적 및 기능: SPI 통신을 수행하기 위한 커스텀 래퍼(Wrapper) 함수입니다.
+ * 입력 변수: 
+ * - scp_service: 동기식 COM 포트 서비스 포인터
+ * - port_handle: 물리적 통신 포트 핸들
+ * - tx_buf: 전송할 데이터가 담긴 버퍼 (명령어 포함)
+ * - rx_buf: 수신할 데이터를 저장할 버퍼
+ * - len: 송수신할 바이트 길이
+ * 출력 변수: 
+ * - xfer_bytes: 실제로 전송/수신된 바이트 수
+ * 리턴 값: sns_rc (성공 시 SNS_RC_SUCCESS 반환)
+ */
+sns_rc simple_rw(sns_sync_com_port_service *scp_service, 
+                 sns_sync_com_port_handle *port_handle, 
+                 uint8_t *tx_buf, 
+                 uint8_t *rx_buf, 
+                 uint32_t len, 
+                 uint32_t *xfer_bytes)
+{
+    // 리턴할 에러 코드 변수를 기본 실패 상태로 초기화합니다.
+    sns_rc rc = SNS_RC_FAILED;
+    
+    // 포트 서비스와 API 포인터가 유효한지 검증합니다.
+    if (scp_service != NULL && scp_service->api != NULL)
+    {
+        // 데이터 송수신을 위한 포트 벡터 구조체를 선언합니다.
+        sns_port_vector vector;
+        
+        // 송신할 0x00 명령어를 레지스터 주소로 설정합니다.
+        vector.reg_addr = tx_buf[0]; 
+        // 데이터를 수신받을 메모리 버퍼의 포인터를 매핑합니다.
+        vector.buffer = rx_buf;      
+        // 수신해야 할 바이트 크기(N Bytes)를 지정합니다.
+        vector.bytes = len;          
+        // Write 동작이 아닌 Read 동작임을 프레임워크에 명시합니다.
+        vector.is_write = false;     
+
+        // Qualcomm SEE 프레임워크의 공식 API를 5개의 인자로 호출하여 에러를 회피합니다.
+        rc = scp_service->api->sns_scp_register_rw(port_handle,
+                                                   &vector,      // 1. 송수신 설정이 담긴 벡터의 주소
+                                                   1,            // 2. 처리할 벡터의 개수 (단일 처리이므로 1)
+                                                   false,        // 3. save_write_time 플래그 (Write 시간 기록 미사용)
+                                                   xfer_bytes);  // 4. 실제로 전송된 바이트 수를 기록할 포인터
+    }
+    // 통신 수행 결과를 반환합니다.
+    return rc;
+}
+
+/*
+ * 함수명: himax_dsp_handle_interrupt_event
+ * 목적 및 기능: 하드웨어 인터럽트(GPIO) 발생 시 호출되어 SPI 통신으로 데이터를 수신합니다.
+ * 입력 변수: 
+ * - this: 현재 센서 인스턴스의 포인터
+ * - timestamp: 인터럽트가 발생한 시스템 타임스탬프
+ * 출력 변수: 없음
+ * 리턴 값: 없음
+ */
+void himax_dsp_handle_interrupt_event(sns_sensor_instance *const this, sns_time timestamp)
+{
+    // 컴파일 시 미사용 변수(unused-parameter) 경고를 에러로 처리하는 것을 회피
+    UNUSED_VAR(timestamp);
+
+    // 센서 인스턴스의 내부 상태 구조체를 가져옵니다.
+    himax_dsp_instance_state *state = (himax_dsp_instance_state*)this->state->state;
+    
+    // 실제로 전송/수신된 바이트 수를 저장할 변수 초기화
+    uint32_t xfer_bytes = 0;
+    
+    // 처음 읽어올 청크(헤더)의 크기를 설정합니다 (11 bytes)
+    uint32_t first_chunk = 11; 
+    
+    // 수신(RX) 데이터를 저장할 버퍼를 0으로 초기화합니다.
+    uint8_t buffer[2048] = {0}; 
+
+    // 송신(TX) 데이터를 저장할 버퍼를 0으로 초기화합니다.
+    uint8_t tx_buffer[2048] = {0};
+
+    // SPI 버스의 전원을 켭니다 (통신 준비)
+    state->scp_service->api->sns_scp_update_bus_power(state->com_port_info.port_handle, true);
+
+    // Himax DSP에 데이터를 요청하기 위한 레지스터 주소 또는 명령(0x00)을 배열의 첫 번째에 삽입합니다.
+    tx_buffer[0] = 0x00;
+
+    // simple_rw 래퍼 함수를 호출하여 SPI 통신으로 11바이트 헤더를 수신합니다.
+    sns_rc rc = simple_rw(state->scp_service, 
+                          state->com_port_info.port_handle, 
+                          tx_buffer, 
+                          buffer, 
+                          first_chunk, 
+                          &xfer_bytes);
+
+    // SPI 통신 성공 여부 확인
+    if (rc == SNS_RC_SUCCESS && xfer_bytes > 0)
+    {
+        SNS_INST_PRINTF(HIGH, this, "SPI Read Success. First Byte: 0x%02X, Second Byte: 0x%02X", buffer[0], buffer[1]);
+
+        // 수신된 헤더 파싱 및 QuRT 공유 메모리 JPEG 기록 로직
+        // 1. 헤더 유효성 검사 (시그니처: 0xC0, 0x5A)
+        if (buffer[0] == 0xC0 && buffer[1] == 0x5A)
+        {
+            // 2. JPEG 페이로드 크기 파싱 (Little Endian 기준: 4~7바이트 위치에 사이즈 정보 존재)
+            uint32_t jpeg_size = (buffer[7] << 24) | (buffer[6] << 16) | (buffer[5] << 8) | buffer[4];
+            
+            SNS_INST_PRINTF(HIGH, this, "Valid Header. JPEG Size: %d bytes", jpeg_size);
+
+            // 유효한 사이즈인지 검증 (최대 할당된 공유 메모리 크기 이하인지 확인)
+            if (jpeg_size > 0 && jpeg_size <= SHARED_SIZE)
+            {
+                qurt_mem_region_attr_t attr;
+                qurt_mem_region_t region;
+                void *vaddr = NULL;
+
+                // 3. QuRT 공유 메모리 맵핑 속성 초기화 및 설정
+                qurt_mem_region_attr_init(&attr);
+                // change(modify)-hyungchul-20260329-0917: qurt_mem_region_attr_set_size 제거 (create 함수 인자로 전달됨)
+                qurt_mem_region_attr_set_physaddr(&attr, SHARED_PHYS_ADDR);
+                
+                // 캐시 일관성 문제(AP와의 데이터 불일치)를 방지하기 위해 캐시를 사용하지 않음
+                qurt_mem_region_attr_set_cache_mode(&attr, QURT_MEM_CACHE_NONE_SHARED); 
+
+                // 4. 물리 메모리(SHARED_PHYS_ADDR)를 가상 메모리로 맵핑 생성
+                // change(modify)-hyungchul-20260329-0917: qurt_mem_pool_default를 qurt_mem_default_pool로 수정
+                if (QURT_EOK == qurt_mem_region_create(&region, SHARED_SIZE, qurt_mem_default_pool, &attr))
+                {
+                    // 맵핑된 가상 주소(Virtual Address) 획득
+                    // change(modify)-hyungchul-20260329-0917: region 포인터 타입 수정(&제거) 및 get_virtaddr로 명칭 변경
+                    qurt_mem_region_attr_get(region, &attr);
+                    qurt_mem_region_attr_get_virtaddr(&attr, (unsigned int *)&vaddr);
+
+                    if (vaddr != NULL)
+                    {
+                        uint32_t offset = 0;
+                        uint32_t remain_bytes = jpeg_size;
+                        uint32_t chunk_size = 2048; // SPI 버퍼 크기에 맞춘 최대 읽기 단위
+
+                        SNS_INST_PRINTF(HIGH, this, "QuRT Mapping Success. Start reading payload to VAddr: 0x%X", (unsigned int)vaddr);
+
+                        // 5. 남은 JPEG 데이터 청크(Chunk) 단위 수신 및 공유 메모리 복사 루프
+                        while (remain_bytes > 0)
+                        {
+                            uint32_t read_len = (remain_bytes > chunk_size) ? chunk_size : remain_bytes;
+                            uint32_t read_bytes = 0;
+                            
+                            // 페이로드 수신용 더미 TX (명령어 없이 Clock만 생성하기 위해 0으로 초기화)
+                            sns_memzero(tx_buffer, sizeof(tx_buffer));
+
+                            // SPI 통신으로 나머지 페이로드 읽기
+                            rc = simple_rw(state->scp_service, state->com_port_info.port_handle, tx_buffer, buffer, read_len, &read_bytes);
+
+                            if (rc == SNS_RC_SUCCESS && read_bytes > 0)
+                            {
+                                // 맵핑된 공유 메모리에 수신한 데이터 안전하게 복사
+                                sns_memscpy((uint8_t*)vaddr + offset, SHARED_SIZE - offset, buffer, read_bytes);
+                                offset += read_bytes;
+                                remain_bytes -= read_bytes;
+                            }
+                            else
+                            {
+                                SNS_INST_PRINTF(ERROR, this, "Payload SPI Read Error. RC: %d", rc);
+                                break; // 통신 에러 발생 시 무한 루프 방지를 위해 탈출
+                            }
+                        }
+                        SNS_INST_PRINTF(HIGH, this, "JPEG transfer complete. Total Size Written: %d bytes", offset);
+                    }
+                    
+                    // 6. 데이터 복사 완료 후 메모리 누수를 방지하기 위해 맵핑 해제 (자원 반환)
+                    qurt_mem_region_delete(region);
+                }
+                else
+                {
+                    SNS_INST_PRINTF(ERROR, this, "QuRT memory mapping failed. PhysAddr: 0x%X", SHARED_PHYS_ADDR);
+                }
+            }
+            else
+            {
+                SNS_INST_PRINTF(ERROR, this, "Invalid JPEG Size: %d (Exceeds SHARED_SIZE %d)", jpeg_size, SHARED_SIZE);
+            }
+        }
+        else
+        {
+            SNS_INST_PRINTF(ERROR, this, "Invalid Header Signature: 0x%02X 0x%02X", buffer[0], buffer[1]);
+        }
+    }
+    else
+    {
+        // 통신 실패 시 에러 로그 출력
+        SNS_INST_PRINTF(ERROR, this, "SPI simple_rw failed. RC: %d", rc);
+    }
+
+    // 통신이 끝난 후 SPI 버스 전원을 끄고 절전 상태로 진입합니다.
+    state->scp_service->api->sns_scp_update_bus_power(state->com_port_info.port_handle, false);
+}
+
+/*
+ * 함수명: himax_dsp_inst_notify_event
+ * 목적 및 기능: 프레임워크로부터 전달되는 이벤트(인터럽트 등)를 수신하고 처리합니다.
+ * 입력 변수: this (센서 인스턴스 포인터)
+ * 출력 변수: 없음
+ * 리턴 값: sns_rc (처리 결과 상태 코드)
+ */
+sns_rc himax_dsp_inst_notify_event(sns_sensor_instance *const this)
+{
+    // 센서 인스턴스 내부 상태 구조체를 가져옵니다.
+    himax_dsp_instance_state *state = (himax_dsp_instance_state*)this->state->state;
+    
+    // 인터럽트 데이터 스트림이 유효한지 확인합니다.
+    if (NULL != state->interrupt_data_stream)
+    {
+        // 스트림으로부터 다음 이벤트를 가져옵니다.
+        sns_sensor_event *event = state->interrupt_data_stream->api->get_next_input(state->interrupt_data_stream);
+        
+        // 이벤트가 존재하는 동안 반복 처리합니다.
+        while (NULL != event)
+        {
+            // 수신된 이벤트가 하드웨어 인터럽트 메시지인지 확인합니다.
+            if (event->message_id == SNS_INTERRUPT_MSGID_SNS_INTERRUPT_EVENT)
+            {
+                // 인터럽트 이벤트 구조체를 기본값으로 초기화합니다.
+                sns_interrupt_event irq_event = sns_interrupt_event_init_default;
+                
+                // 프로토콜 버퍼 스트림을 생성하여 이벤트를 디코딩할 준비를 합니다.
+                pb_istream_t stream = pb_istream_from_buffer((pb_byte_t*)event->event, event->event_len);
+                
+                // 이벤트를 성공적으로 디코딩한 경우
+                if (pb_decode(&stream, sns_interrupt_event_fields, &irq_event))
+                {
+                    // 실질적인 데이터 읽기 및 파싱 함수를 호출합니다.
+                    himax_dsp_handle_interrupt_event(this, irq_event.timestamp);
+                }
+            }
+            // 다음 이벤트를 가져옵니다.
+            event = state->interrupt_data_stream->api->get_next_input(state->interrupt_data_stream);
+        }
+    }
+
+    // 처리가 완료되면 성공을 반환합니다.
+    return SNS_RC_SUCCESS;
+}
+
+/*
+ * 함수명: himax_dsp_inst_set_client_config
+ * 목적 및 기능: 클라이언트(App)의 설정 요청을 처리합니다. Himax 전용 드라이버이므로 기본 응답 처리만 수행합니다.
+ * 입력 변수: 
+ * - this: 센서 인스턴스 포인터
+ * - client_request: 클라이언트의 요청 데이터 포인터
+ * 출력 변수: 없음
+ * 리턴 값: sns_rc (성공 상태 반환)
+ */
+sns_rc himax_dsp_inst_set_client_config(sns_sensor_instance * const this, sns_request const *client_request) 
+{ 
+    // 컴파일 시 미사용 변수 경고를 회피하기 위한 매크로 사용
+    UNUSED_VAR(this);
+    UNUSED_VAR(client_request);
+    
+    // 성공 코드를 반환합니다.
+    return SNS_RC_SUCCESS;
+}
+
+/*
+ * 함수명: himax_dsp_inst_init
+ * 목적 및 기능: 센서 인스턴스 생성 시 초기화를 수행합니다. COM 포트 설정 등을 진행합니다.
+ * 입력 변수: this (초기화할 센서 인스턴스 포인터), sensor_state (센서의 상태 데이터)
+ * 출력 변수: 없음
+ * 리턴 값: sns_rc (성공 상태 반환)
+ */
+sns_rc himax_dsp_inst_init(sns_sensor_instance *const this, sns_sensor_state const *sensor_state)
+{
+    // 센서 및 인스턴스의 상태 구조체를 가져옵니다.
+    himax_dsp_instance_state *inst_state = (himax_dsp_instance_state*)this->state->state;
+    himax_dsp_state *sensor_state_ptr = (himax_dsp_state*)sensor_state->state;
+
+    // 센서 상태에 저장된 COM 포트 정보를 인스턴스 상태로 복사합니다.
+    sns_memscpy(&inst_state->com_port_info, sizeof(inst_state->com_port_info),
+                &sensor_state_ptr->com_port_info, sizeof(sensor_state_ptr->com_port_info));
+
+    // 성공 코드를 반환합니다.
+    return SNS_RC_SUCCESS;
+}
+
+/*
+ * 함수명: himax_dsp_inst_deinit
+ * 목적 및 기능: 센서 인스턴스 종료 시 할당된 자원을 해제합니다.
+ * 입력 변수: this (해제할 센서 인스턴스 포인터)
+ * 출력 변수: 없음
+ * 리턴 값: sns_rc (성공 상태 반환)
+ */
+sns_rc himax_dsp_inst_deinit(sns_sensor_instance *const this)
+{
+    // 인스턴스의 상태 구조체를 가져옵니다.
+    himax_dsp_instance_state *inst_state = (himax_dsp_instance_state*)this->state->state;
+
+    // 인터럽트 데이터 스트림이 열려 있다면 닫습니다.
+    if (NULL != inst_state->interrupt_data_stream)
+    {
+        // 인스턴스 전용 스트림 제거 API 호출
+        sns_sensor_util_remove_sensor_instance_stream(this, &inst_state->interrupt_data_stream);
+    }
+    
+    // 비동기 COM 포트 데이터 스트림이 열려 있다면 닫습니다.
+    if (NULL != inst_state->async_com_port_data_stream)
+    {
+        // 인스턴스 전용 스트림 제거 API 호출
+        sns_sensor_util_remove_sensor_instance_stream(this, &inst_state->async_com_port_data_stream);
+    }
+
+    // 성공 코드를 반환합니다.
+    return SNS_RC_SUCCESS;
+}
+
+/*==============================================================================
+  Public Data Definitions
+  ============================================================================*/
+/*
+ * 변수명: himax_dsp_sensor_instance_api
+ * 목적 및 기능: 프레임워크가 센서 인스턴스의 라이프사이클 및 이벤트를 제어할 수 있도록
+ * 인스턴스 구현 함수들의 포인터를 제공하는 인터페이스 구조체입니다.
+ */
+sns_sensor_instance_api himax_dsp_sensor_instance_api =
+{
+  .struct_len        = sizeof(sns_sensor_instance_api),
+  .init              = &himax_dsp_inst_init,
+  .deinit            = &himax_dsp_inst_deinit,
+  .set_client_config = &himax_dsp_inst_set_client_config,
+  .notify_event      = &himax_dsp_inst_notify_event
+};
