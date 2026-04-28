@@ -1,8 +1,9 @@
 /*
  * 파일명: sns_himax_dsp_sensor_instance.c
  * 목적 및 기능: ADSP 환경에서 Himax DSP와 SPI(Instance 5) 통신을 수행하여, 
- * 인터럽트(GPIO 102) 발생 시 확장된 17 Bytes 헤더를 파싱하고 동적 크기의 JPEG를 128KB 공유 메모리에 씁니다.
- * 첨부된 ct7117x 성공 코드를 바탕으로 QuRT 메모리 맵핑 및 SPI 청크 리딩 로직을 최적화하여 적용하였습니다.
+ * 인터럽트(GPIO 102) 발생 시 수신된 데이터의 Type에 따라 11 Bytes 또는 17 Bytes 헤더를 동적으로 파싱하고,
+ * 동적 크기의 JPEG를 128KB 공유 메모리에 씁니다.
+ * 첨부된 성공 코드를 바탕으로 QuRT 메모리 맵핑 및 SPI 청크 리딩 로직을 최적화하여 적용하였습니다.
  */
 
 /*==============================================================================
@@ -90,7 +91,7 @@ static sns_rc himax_com_read_wrapper(
 void himax_dsp_handle_interrupt_event(sns_sensor_instance *const instance, sns_time timestamp)
 {
     himax_dsp_instance_state *state = (himax_dsp_instance_state*)instance->state->state; // 인스턴스 상태 획득
-    SNS_INST_PRINTF(LOW, instance, "20260407 Himax DSP: Interrupt triggered"); // 인터럽트 진입 로그
+    SNS_INST_PRINTF(LOW, instance, "20260428 Himax DSP: Interrupt triggered"); // 인터럽트 진입 로그
 
     // change(add)-hyungchul-20260325-1538 시작: 스택 오버플로우 방지를 위한 동적 메모리 할당
     // QuRT 환경에서 지역변수로 2KB를 선언하면 스택이 터져 루프 변수가 오염(Tearing 유발)될 수 있으므로 heap 할당.
@@ -150,9 +151,10 @@ void himax_dsp_handle_interrupt_event(sns_sensor_instance *const instance, sns_t
         // SPI 통신 중 슬립 방지를 위해 Island Exit 호출 (DDR 접근 및 긴 통신 시간 확보)
         sns_island_exit_internal();
         
-        // change(add)-hyungchul-20260406-1704 시작: 헤더 사이즈를 기존 11바이트에서 17바이트로 변경
-        uint32_t header_len = 17; // Himax DSP 펌웨어 변경에 따른 신규 헤더 길이 적용
-        // change(add)-hyungchul-20260406-1704 끝
+        // change(add)-hyungchul-20260428-1840 시작: 헤더 길이를 동적으로 결정하기 위해 초기값을 0으로 설정
+        uint32_t header_len = 0; 
+        // change(add)-hyungchul-20260428-1840 끝
+
         uint32_t jpeg_size = 0; // 수신될 JPEG 페이로드 크기
         uint32_t payload_read_bytes = 0; // 현재까지 읽은 페이로드 바이트 수
         uint8_t *shared_mem_ptr = (uint8_t *)myddr_base_addr; // 공유 메모리의 가상 주소 포인터
@@ -177,32 +179,50 @@ void himax_dsp_handle_interrupt_event(sns_sensor_instance *const instance, sns_t
                         0x00, buffer, first_chunk, &xfer_bytes); // SPI 데이터 수신
         total_read_bytes += xfer_bytes; // 누적 읽기 바이트 갱신
 
-        // 2. 헤더 파싱 및 데이터 정합성 확인 (SYNC: 0xC0 0x5A, Type: 0x01(JPEG) or 0x16(YUV420P))
-        if(buffer[0] == 0xC0 && buffer[1] == 0x5A && (buffer[2] == 0x01 || buffer[2] == 0x16))
+        // 2. 헤더 파싱 및 데이터 정합성 동적 확인
+        // change(add)-hyungchul-20260428-1840 시작: 타입에 따른 11Byte / 17Byte 분기 파싱
+        if(buffer[0] == 0xC0 && buffer[1] == 0x5A && (buffer[2] == 0x01 || buffer[2] == 0x06 || buffer[2] == 0x16))
         {
-            // change(add)-hyungchul-20260325-1538 시작: 부호 확장(Sign Extension) 버그 수정
-            // uint32_t로 명시적 캐스팅을 하여 비트 시프트 연산 시 데이터가 음수로 변질되는 것을 방지합니다.
+            // Type 값에 따라 헤더의 길이 결정
+            if (buffer[2] == 0x01) {
+                header_len = 11; // 기존 11-byte 헤더
+            } else {
+                header_len = 17; // 확장된 17-byte 헤더 (0x06 or 0x16)
+            }
+
+            // 부호 확장(Sign Extension) 버그 방지 처리가 포함된 JPEG 크기 파싱
             jpeg_size = ((uint32_t)buffer[6] << 24) | ((uint32_t)buffer[5] << 16) | ((uint32_t)buffer[4] << 8) | (uint32_t)buffer[3];
-            // change(add)-hyungchul-20260325-1538 끝
+            
+            SNS_INST_PRINTF(HIGH, instance, "Header Parsed successfully. Type: 0x%02X, Header Len: %u, JPEG Size: %u bytes", buffer[2], header_len, jpeg_size);
 
-            SNS_INST_PRINTF(HIGH, instance, "Header Parsed successfully. JPEG Size: %u bytes", jpeg_size);
+            // 헤더 길이에 따른 맞춤형 파라미터 파싱 및 로깅
+            if (header_len == 11) 
+            {
+                uint8_t result = buffer[7];               // 결과 (1 byte)
+                uint8_t similarity = buffer[8];           // 이미지 유사도 (1 byte)
+                uint8_t scene_index = buffer[9];          // 씬 인덱스 (1 byte)
+                uint8_t occl_prob = buffer[10];           // Occlusion 확률 (1 byte)
+                
+                SNS_INST_PRINTF(HIGH, instance, "11-Byte Header: Result=%u, Sim=%u, Scene=%u, Occ=%u", 
+                                result, similarity, scene_index, occl_prob);
+            } 
+            else 
+            {
+                uint8_t low_illumination = buffer[7];     // 저조도 상태 (1 byte)
+                uint8_t similarity = buffer[8];           // 이미지 유사도 (1 byte, ex: 70 = 70%)
+                uint8_t scene_index = buffer[9];          // 씬 인덱스 (1 byte)
+                uint8_t occl_prob = buffer[10];           // Occlusion 확률 (1 byte, 0~100)
+                uint8_t blur_value = buffer[11];          // 블러 값 (1 byte)
+                uint8_t expose_0 = buffer[12];            // 노출 값 0 (1 byte)
+                uint8_t expose_1 = buffer[13];            // 노출 값 1 (1 byte)
+                uint8_t a_gain = buffer[14];              // 아날로그 게인 (1 byte)
+                uint8_t d_gain_0 = buffer[15];            // 디지털 게인 0 (1 byte)
+                uint8_t d_gain_1 = buffer[16];            // 디지털 게인 1 (1 byte)
 
-            // change(add)-hyungchul-20260406-1704 시작: 17바이트 확장 헤더 파라미터 파싱 및 디버그 로깅
-            // 수신된 17바이트 버퍼에서 추가된 이미지 정보 및 노출 제어 값을 추출하여 확인합니다.
-            uint8_t low_illumination = buffer[7];     // 저조도 상태 (1 byte)
-            uint8_t similarity = buffer[8];           // 이미지 유사도 (1 byte, ex: 70 = 70%)
-            uint8_t scene_index = buffer[9];          // 씬 인덱스 (1 byte)
-            uint8_t occl_prob = buffer[10];           // Occlusion 확률 (1 byte, 0~100)
-            uint8_t blur_value = buffer[11];          // 블러 값 (1 byte)
-            uint8_t expose_0 = buffer[12];            // 노출 값 0 (1 byte)
-            uint8_t expose_1 = buffer[13];            // 노출 값 1 (1 byte)
-            uint8_t a_gain = buffer[14];              // 아날로그 게인 (1 byte)
-            uint8_t d_gain_0 = buffer[15];            // 디지털 게인 0 (1 byte)
-            uint8_t d_gain_1 = buffer[16];            // 디지털 게인 1 (1 byte)
-
-            SNS_INST_PRINTF(HIGH, instance, "Ext Header: low_illu=%u,  Sim=%u, Scene=%u, Occ=%u, Blur=%u, Exp=[%u,%u], GainA=%u, GainD=[%u,%u]", 
-                            low_illumination, similarity, scene_index, occl_prob, blur_value, expose_0, expose_1, a_gain, d_gain_0, d_gain_1);
-            // change(add)-hyungchul-20260406-1704 끝
+                SNS_INST_PRINTF(HIGH, instance, "17-Byte Header: low_illu=%u, Sim=%u, Scene=%u, Occ=%u, Blur=%u, Exp=[%u,%u], GainA=%u, GainD=[%u,%u]", 
+                                low_illumination, similarity, scene_index, occl_prob, blur_value, expose_0, expose_1, a_gain, d_gain_0, d_gain_1);
+            }
+            // change(add)-hyungchul-20260428-1840 끝
 
             // 메모리 오버플로우 방지 로직 (헤더 크기 + JPEG 크기가 공유 메모리 크기를 초과하는지 검사)
             if((header_len + jpeg_size) > SHARED_SIZE)
